@@ -1,0 +1,73 @@
+Git笔记
+
+常用命令：
+	1.	git init：初始化
+	2.	git status：查看工作区状态
+	3.	git add <文件名>：添加到暂存区
+	4.	git commit -m "本次提交的修改日志"：提交到本地仓库
+			注：commit提交的是add到暂存区的修改，如果add之后又修改了文件，但是没有重新add，
+			则commit的时候只提交第一次add之前的修改
+	5.	git log：查看日志
+		git log --pretty=oneline：注：参数“--pretty=oneline”不能有空格）
+	6.	git reset head^：回退版本(后面加数字n可以回退从当前数往后退的n个版本)
+		git reset head~：回退版本(后面加数字n可以回退从当前数往后退的n个版本)
+	7.	git reflog：查看历史命令
+	8.	git checkout -- <文件名>：撤销工作区修改(“--”必须存在，且和文件名之间必须有空格)
+		git reset HEAD <文件名>：撤销暂存区修改
+	9.	git rm <文件名>：删除版本库中的文件(该命令和add类似，都需要之后用commit提交)
+		git rm -r <文件夹>：删除文件夹，-r表示递归所有子目录，如果要删除的，是空的文件夹，此处可以不用带上-r
+
+远程仓库：
+	10.	git remote add <仓库名> git@server-name:path/repo-name.	git：关联远程仓库
+	11.	git push [-u] <仓库名> <分支名>：推送到远程仓库
+	12.	git clone git@server-name:path/repo-name.git：克隆远程仓库
+	
+分支管理：
+	13.	git branch <分支名称>：创建分支
+		git checkout <分支名称>：切换分支
+		git checkout -b <分支名称>：创建并切换分支
+	14.	git branch：查看分支(当前分支前会有一个*号)
+	15.	git merge：合并分支(命令用于合并指定分支到当前分支)
+		--no-ff参数就可以用普通模式合并，合并后的历史有分支，能看出来曾经做过合并
+		git merge --no-ff -m "合并的日志" <分支名称>
+	16.	git branch -d <分支名称>：删除分支
+	17.	git log --graph [--pretty=oneline] [--abbrev-commit]：查看分支合并日志
+	18.	git stash：隐藏工作现场。
+		注：使用stash的意义可能在于心创建的文件如果只是add到stage，切换分支时，会把文件带到另外的分支
+	   	git stash save '注释'：(可以添加一些注释)
+	19.	git stash list：查看隐藏的工作现场
+	20.	git stash pop [–index] [stash_id]
+		git stash pop 恢复最新的进度到工作区。git默认会把工作区和暂存区的改动都恢复到工作区。
+		git stash pop --index 恢复最新的进度到工作区和暂存区。（尝试将原来暂存区的改动还恢复到暂存区）
+		git stash pop stash@{1}恢复指定的进度到工作区。stash_id是通过git stash list命令得到的 
+			通过git stash pop命令恢复进度后，会删除当前进度。
+	21.	git stash apply [–index] [stash_id]：
+		恢复工作现场，但是恢复后，stash内容并不删除，其余和git stash pop 命令一样
+	22.	git stash drop [stash_id]：删除一个存储的进度。如果不指定stash_id，则默认删除最新的存储进度。
+	23.	git stash clear：删除所有存储的进度。
+	24.	git branch -D <name>：强行删除一个没有合并的分支
+	25.	git remote：查看远程库信息
+		git remote -v：查看更详细的远程仓库信息
+	26.	git checkout -b <分支名> origin/<分支名>：创建远程仓库的分支到本地分支，本地和远程分支的名称最好一致
+	27.	git pull：将最新的提交从当前分支抓取下来
+		git pull失败了，原因可能是没有指定本地的(例如：dev)分支与远程(例如：origin/dev)分支的链接
+	28.	git branch --set-upstream-to=<仓库名>/<分支名> [<本地分支名>]：创建本地分支和远程分支的链接关系
+		git branch --set-upstream-to <仓库名>/<分支名> [<本地分支名>]：创建本地分支和远程分支的链接关系
+		git branch -u <仓库名>/<分支名> [<本地分支名>]：创建本地分支和远程分支的链接关系
+
+标签管理：
+	29.	git tag <tag-name> [<commit-id>]：打一个新的标签，默认标签是打在最新提交的commit上的，
+		默认为HEAD，也可以指定一个commit id
+	30.	git tag：查看所有标签
+	31.	git tag -a <tag-name> -m "注释" <commit-id>：创建带有说明的标签，用-a指定标签名，-m指定说明文字
+	32.	git show <tagname>：查看标签信息
+	33.	git push <仓库名> <tag-name>：将某个标签推送到远程
+		git push <仓库名> --tags：一次性推送全部尚未推送到远程的本地标签
+	34.	git tag -d <tag-name>：删除标签
+	35.	git push origin :refs/tags/<tagname>：可以删除一个远程标签，但是需要先删除本地标签
+
+自定义Git：
+	36.	git add -f <文件名>：强制添加被ignore的文件
+	37.	git check-ignore -v <文件名>：检查这个文件是被哪条ignore规则忽略了
+	38. git config --global alias.<简写> <原命令>：给命令取别名，简化写法
+	
