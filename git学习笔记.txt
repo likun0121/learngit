@@ -60,7 +60,6 @@ Git笔记
 	11.	git stash clear：删除所有存储的进度。
 	12.	git branch -D <name>：强行删除一个没有合并的分支
 	
-分支与远程仓库：
 远程仓库：
 	1.	git remote：查看远程库信息。
 		git remote -v：查看更详细的远程仓库信息。
