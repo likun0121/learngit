@@ -27,6 +27,7 @@ classes/
 bin/
 .classpath
 .project
+.settings/
 
 #idea
 .idea/
