@@ -29,8 +29,10 @@ bin/
 .project
 .settings/
 
-#idea
+# idea
 .idea/
-target/
 build/
 *.iml
+
+# maven
+target/
