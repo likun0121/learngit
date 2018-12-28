@@ -1,145 +1,151 @@
-Git�ʼ�
+Git笔记
 
-�������
-	1.	git init����ʼ��
-	2.	git status���鿴������״̬
-	3.	git add <�ļ���>�����ӵ��ݴ���
-		git add -u(��ͬ��"git add --update")���ѹ�����������tracked�ļ��б��޸Ĺ�����ɾ���ļ�����Ϣ���ӵ��ݴ�����
-			���������ᴦ��untracted���ļ����������ں������·�����ƣ�ֻ�ύĳ��·���µ����и��ġ�
-		git add -A(��ͬ��"git add --all")���ѹ�����������tracked�ļ��б��޸Ĺ�����ɾ���ļ�����������untracted���ļ���Ϣ
-			���ӵ��ݴ�����������ͬ�����Լ���·�����ƣ�ֻ�ύĳ��·���µ����и��ġ�
-	4.	git commit -m "�����ύ���޸���־"���ύ�����زֿ�
-			ע��commit�ύ����add���ݴ������޸ģ����add֮�����޸����ļ�������û������add��
-			��commit��ʱ��ֻ�ύ��һ��add֮ǰ���޸�
-	5.	git log���鿴��־
-		git log --pretty=oneline��ע��������--pretty=oneline�������пո�
-	6.	git reset [--soft --mixed --hard] head^�����˰汾(���������n���Ի��˴ӵ�ǰ�������˵�n���汾)
-		git reset [--soft --mixed --hard] head~�����˰汾(���������n���Ի��˴ӵ�ǰ�������˵�n���汾)
-		git reset [--soft --mixed --hard] commit_id�����˵�ָ�����ύid�İ汾��
-			����������Ӱ�죺
-			--soft��������HEAD��ָ����commit�����ǹ��������ݴ�������仯�������commit֮��ı仯���ƶ����ݴ�����
-			--mixed��Ĭ��ֵ������HEAD��ָ����commit��ͬʱҲ�������ݴ�����ʹ�ݴ����Ͱ汾�Ᵽ��һ�£������commit֮��ı仯
-				�ƶ�����������
-			--hard������HEAD��ָ����commit��ͬʱҲ�Ὣ�ݴ����͹�����Ҳ�����ã�ʹ������ȫһ�¡�
-	7.	git reflog���鿴��ʷ����
-	8.	git checkout -- <�ļ���>�������������޸ĵ����һ��add������
-			��--��������ڣ���Ȼ�����л���֧����Һ��ļ���֮������пո�
-	9	git reset HEAD <�ļ���>�������ݴ����޸ģ���������ļ����������ݴ������е��޸�
-	10.	git rm <�ļ���>��ɾ���汾���е��ļ�(�������add���ƣ�����Ҫ֮����commit�ύ)
-		git rm -r <�ļ���>��ɾ���ļ��У�-r��ʾ�ݹ�������Ŀ¼�����Ҫɾ���ģ��ǿյ��ļ��У��˴����Բ��ô���-r
-	11.	git diff���Աȵ��ǹ��������ݴ����Ĳ��졣
-		git diff --cached���Աȵ����ݴ����Ͱ汾�������ύ�Ĳ��졣
-		git diff head���Աȵ��ǹ������Ͱ汾�������ύ�Ĳ��졣
-	12.	git mv <ԭ����> <������>���ļ�����������
+常用命令：
+	1.	git init：初始化
+	2.	git status：查看工作区状态
+	3.	git add <文件名>：添加到暂存区
+		git add -u(等同于"git add --update")：把工作区内所有tracked文件中被修改过或已删除文件的信息添加到暂存区。
+			但是它不会处理untracted的文件。还可以在后面加上路径限制，只提交某个路径下的所有更改。
+		git add -A(等同于"git add --all")：把工作区内所有tracked文件中被修改过或已删除文件，包括所有untracted的文件信息
+			添加到暂存区。该命令同样可以加上路径限制，只提交某个路径下的所有更改。
+	4.	git commit -m "本次提交的修改日志"：提交到本地仓库
+			注：commit提交的是add到暂存区的修改，如果add之后又修改了文件，但是没有重新add，
+			则commit的时候只提交第一次add之前的修改
+	5.	git log：查看日志
+		git log --pretty=oneline：注：参数“--pretty=oneline”不能有空格）
+	6.	git reset [--soft --mixed --hard] head^：回退版本(后面加数字n可以回退从当前数往后退的n个版本)
+		git reset [--soft --mixed --hard] head~：回退版本(后面加数字n可以回退从当前数往后退的n个版本)
+		git reset [--soft --mixed --hard] commit_id：回退到指定的提交id的版本。
+			三个参数的影响：
+			--soft：将重置HEAD指针到指定的commit（假设为commit A），但是工作区和暂存区不会变化，
+					将该commit A之后的变化都移动到暂存区。
+			--mixed：默认值，重置HEAD指针到指定的commit（假设commit id为A），同时也会重置暂存区，
+					使暂存区和版本库保持一致，将该commit A之后的变化移动到工作区。
+			--hard：重置HEAD指针到指定的commit（假设commit id为A），同时也会将暂存区和工作区也都
+					重置为commit A的状态，使三者完全一致，丢掉commit A之后的所有修改。
+		对此我找到一个别人的更简单的总结：
+			其实就是--soft 、--mixed以及--hard是三个恢复等级。
+			使用--soft就仅仅将头指针恢复，已经add的缓存以及工作空间的所有东西都不变。
+			使用--mixed，就将头恢复掉，已经add的缓存也会丢失掉，工作空间的代码什么的是不变的。
+			使用--hard，那么一切就全都恢复了，头变，add的缓存消失，代码什么的也恢复到以前状态。
+	7.	git reflog：查看历史命令
+	8.	git checkout -- <文件名>：撤销工作区修改到最近一次add操作。
+			“--”必须存在，不然就是切换分支命令，且和文件名之间必须有空格。
+	9	git reset HEAD <文件名>：撤销暂存区修改，如果不加文件名，则撤销暂存区所有的修改
+	10.	git rm <文件名>：删除版本库中的文件(该命令和add类似，都需要之后用commit提交)
+		git rm -r <文件夹>：删除文件夹，-r表示递归所有子目录，如果要删除的，是空的文件夹，此处可以不用带上-r
+	11.	git diff：对比的是工作区和暂存区的差异。
+		git diff --cached：对比的是暂存区和版本库最新提交的差异。
+		git diff head：对比的是工作区和版本库最新提交的差异。
+	12.	git mv <原名称> <新名称>：文件的重命名。
 	
-��֧������
-	1.	git branch <��֧����>��������֧
-		git checkout <��֧����>���л���֧
-		git checkout -b <��֧����>���������л���֧
-	2.	git branch [-r] [-a]���鿴��֧(��ǰ��֧ǰ����һ��*��)
-			-rѡ����������鿴Զ�̷�֧��-aѡ��鿴���з�֧��
-	3.	git merge���ϲ���֧(�������ںϲ�ָ����֧����ǰ��֧)
-			--no-ff�����Ϳ�������ͨģʽ�ϲ����ϲ������ʷ�з�֧���ܿ��������������ϲ�
-		git merge --no-ff -m "�ϲ�����־" <��֧����>
-	4.	git branch -d <��֧����>��ɾ����֧
-	5.	git log --graph [--pretty=oneline] [--abbrev-commit]���鿴��֧�ϲ���־
-	6.	git stash�����ع����ֳ���
-			ע��ʹ��stash��������������Ĵ������ļ����ֻ��add��stage���л���֧ʱ������ļ���������ķ�֧
-	   	git stash save 'ע��'��(��������һЩע��)
-	7.	git stash list���鿴���صĹ����ֳ�
-	8.	git stash pop [�Cindex] [stash_id]
-		git stash pop �ָ����µĽ��ȵ���������gitĬ�ϻ�ѹ��������ݴ����ĸĶ����ָ�����������
-		git stash pop --index �ָ����µĽ��ȵ����������ݴ����������Խ�ԭ���ݴ����ĸĶ����ָ����ݴ�����
-		git stash pop stash@{1}�ָ�ָ���Ľ��ȵ���������stash_id��ͨ��git stash list����õ��� 
-			ͨ��git stash pop����ָ����Ⱥ󣬻�ɾ����ǰ���ȡ�
-	9.	git stash apply [�Cindex] [stash_id]��
-			�ָ������ֳ������ǻָ���stash���ݲ���ɾ���������git stash pop ����һ��
-	10.	git stash drop [stash_id]��ɾ��һ���洢�Ľ��ȡ������ָ��stash_id����Ĭ��ɾ�����µĴ洢���ȡ�
-	11.	git stash clear��ɾ�����д洢�Ľ��ȡ�
-	12.	git branch -D <name>��ǿ��ɾ��һ��û�кϲ��ķ�֧
+分支管理：
+	1.	git branch <分支名称>：创建分支
+		git checkout <分支名称>：切换分支
+		git checkout -b <分支名称>：创建并切换分支
+	2.	git branch [-r] [-a]：查看分支(当前分支前会有一个*号)
+			-r选项，可以用来查看远程分支，-a选项查看所有分支。
+	3.	git merge：合并分支(命令用于合并指定分支到当前分支)
+			--no-ff参数就可以用普通模式合并，合并后的历史有分支，能看出来曾经做过合并
+		git merge --no-ff -m "合并的日志" <分支名称>
+	4.	git branch -d <分支名称>：删除分支
+	5.	git log --graph [--pretty=oneline] [--abbrev-commit]：查看分支合并日志
+	6.	git stash：隐藏工作现场。
+			注：使用stash的意义可能在于心创建的文件如果只是add到stage，切换分支时，会把文件带到另外的分支
+	   	git stash save '注释'：(可以添加一些注释)
+	7.	git stash list：查看隐藏的工作现场
+	8.	git stash pop [–index] [stash_id]
+		git stash pop 恢复最新的进度到工作区。git默认会把工作区和暂存区的改动都恢复到工作区。
+		git stash pop --index 恢复最新的进度到工作区和暂存区。（尝试将原来暂存区的改动还恢复到暂存区）
+		git stash pop stash@{1}恢复指定的进度到工作区。stash_id是通过git stash list命令得到的 
+			通过git stash pop命令恢复进度后，会删除当前进度。
+	9.	git stash apply [–index] [stash_id]：
+			恢复工作现场，但是恢复后，stash内容并不删除，其余和git stash pop 命令一样
+	10.	git stash drop [stash_id]：删除一个存储的进度。如果不指定stash_id，则默认删除最新的存储进度。
+	11.	git stash clear：删除所有存储的进度。
+	12.	git branch -D <name>：强行删除一个没有合并的分支
 
-Զ�ֿ̲⣺
-	1.	git remote���鿴Զ�̿���Ϣ��
-		git remote -v���鿴����ϸ��Զ�ֿ̲���Ϣ��
-	2.	git clone [-o <Զ�ֿ̲���>] git@server-name:path/repo-name.git����¡Զ�ֿ̲⡣
-			clone�İ汾��Ĭ�ϵ�Զ�̿���Ϊorigin���� -o <Զ�ֿ̲���>���Խ��ֿ���ָ��Ϊ����ֵ��
-	3.	git remote show <Զ�̿���>���鿴��Զ�̿����ϸ��Ϣ
-	4.	git remote add <Զ�ֿ̲���> <git@server-name:path/repo-name.git>������һ��Զ�ֿ̲����
-	5.	git remote rm <Զ�̿���>��ɾ����Զ�̿������
-	6.	git remote rename <ԭԶ�̿���> <�¿���>��������һ��Զ�̿�Ĺ�����
-	7.	git fetch�������µ��ύ�ӵ�ǰ��֧ץȡ������
-			������ͨ�������鿴�����˵Ľ��̣���Ϊ��ȡ�صĴ�����㱾�صĿ�������û��Ӱ�졣
-		git fetch <Զ�̿���>����ָ����Զ�̿�����з�֧�ĸ��£�ȫ��ץȡ�����ء�
-		git fetch <Զ�̿���> <��֧��>����Զ�̿�ָ���ķ�֧�ĸ���ȡ�ص����ء�
-			��ȡ�صĸ��£��ڱ���Ҫ��"Զ�̿���/��֧��"����ʽ��ȡ������Ĭ�ϵ�"origin/master"������Ϊһ��Զ�̷�֧���ڵġ�
+远程仓库：
+	1.	git remote：查看远程库信息。
+		git remote -v：查看更详细的远程仓库信息。
+	2.	git clone [-o <远程仓库名>] git@server-name:path/repo-name.git：克隆远程仓库。
+			clone的版本库默认的远程库名为origin，用 -o <远程仓库名>可以将仓库名指定为给定值。
+	3.	git remote show <远程库名>：查看该远程库的详细信息
+	4.	git remote add <远程仓库名> <git@server-name:path/repo-name.git>：创建一个远程仓库关联
+	5.	git remote rm <远程库名>：删除该远程库关联。
+	6.	git remote rename <原远程库名> <新库名>：重命名一个远程库的关联。
+	7.	git fetch：将最新的提交从当前分支抓取下来。
+			该命令通常用来查看其他人的进程，因为它取回的代码对你本地的开发代码没有影响。
+		git fetch <远程库名>：将指定的远程库的所有分支的更新，全部抓取到本地。
+		git fetch <远程库名> <分支名>：将远程库指定的分支的更新取回到本地。
+			所取回的更新，在本地要用"远程库名/分支名"的形式读取，例如默认的"origin/master"，是作为一个远程分支存在的。
 			
-			������Զ�̷�֧���Ը��ݸ�Զ�̷�֧����һ�����ط�֧������git checkout -b newBrach origin/master
-			���ߺϲ���Զ�̷�֧������git merge origin/master ���� git rebase origin/master
+			针对这个远程分支可以根据该远程分支创建一个本地分支，例如git checkout -b newBrach origin/master
+			或者合并该远程分支，例如git merge origin/master 或者 git rebase origin/master
 
-	8.	git checkout -b <���ط�֧��> <Զ�̿���>/<Զ�̷�֧��>����Զ�ֿ̲�ķ�֧����һ�����ط�֧��
-	9.	git pull <Զ��������> <Զ�̷�֧��>:<���ط�֧��>��ȡ��Զ�ֿ̲�ĳ����֧�ĸ��£����뱾�ص�ָ����֧�ϲ���
-			���Զ�̷�֧���뵱ǰ��֧�ϲ�����ð�ź󼰺���ı��ط�֧������ʡ�ԡ�
-			���pullʧ���ˣ�ԭ�������û��ָ�����صķ�֧��Զ�̷�֧�����ӡ�
+	8.	git checkout -b <本地分支名> <远程库名>/<远程分支名>：以远程仓库的分支创建一个本地分支。
+	9.	git pull <远程主机名> <远程分支名>:<本地分支名>：取回远程仓库某个分支的更新，再与本地的指定分支合并。
+			如果远程分支是与当前分支合并，则冒号后及后面的本地分支名可以省略。
+			如果pull失败了，原因可能是没有指定本地的分支与远程分支的连接。
 
-			��ĳЩ���ϣ�Git���Զ��ڱ��ط�֧��Զ�̷�֧֮�䣬����һ��׷�ٹ�ϵ��tracking����
-			���磬��git clone��ʱ�����б��ط�֧Ĭ����Զ��������ͬ����֧������׷�ٹ�ϵ��Ҳ����˵��
-			���ص�master��֧�Զ�"׷��"origin/master��֧��GitҲ�����ֶ�����׷�ٹ�ϵ����������������˵����
+			在某些场合，Git会自动在本地分支与远程分支之间，建立一种追踪关系（tracking）。
+			比如，在git clone的时候，所有本地分支默认与远程主机的同名分支，建立追踪关系，也就是说，
+			本地的master分支自动"追踪"origin/master分支。Git也允许手动建立追踪关系，该命令在下面有说明。
 			
-			�����ǰ��֧��Զ�̷�֧����׷�ٹ�ϵ��git pull�Ϳ���ʡ��Զ�̷�֧����
+			如果当前分支与远程分支存在追踪关系，git pull就可以省略远程分支名。
 			git pull origin 
-			���������ʾ�����صĵ�ǰ��֧�Զ����Ӧ��origin����"׷�ٷ�֧"��remote-tracking branch�����кϲ���
+			上面命令表示，本地的当前分支自动与对应的origin主机"追踪分支"（remote-tracking branch）进行合并。
 
-			�����ǰ��ֻ֧��һ��׷�ٷ�֧����Զ��������������ʡ�ԡ�
+			如果当前分支只有一个追踪分支，连远程主机名都可以省略。
 			git pull 
-			���������ʾ����ǰ��֧�Զ���Ψһһ��׷�ٷ�֧���кϲ���
+			上面命令表示，当前分支自动与唯一一个追踪分支进行合并。
 
-	10.	git branch --set-upstream-to=<Զ�ֿ̲���>/<Զ�̷�֧��> [<���ط�֧��>]���������ط�֧��Զ�̷�֧��׷�ٹ�ϵ
-		git branch --set-upstream-to <Զ�ֿ̲���>/<Զ�̷�֧��> [<���ط�֧��>]���������ط�֧��Զ�̷�֧��׷�ٹ�ϵ
-		git branch -u <�ֿ���>/<��֧��> [<���ط�֧��>]���������ط�֧��Զ�̷�֧��׷�ٹ�ϵ
+	10.	git branch --set-upstream-to=<远程仓库名>/<远程分支名> [<本地分支名>]：创建本地分支和远程分支的追踪关系
+		git branch --set-upstream-to <远程仓库名>/<远程分支名> [<本地分支名>]：创建本地分支和远程分支的追踪关系
+		git branch -u <仓库名>/<分支名> [<本地分支名>]：创建本地分支和远程分支的追踪关系
 
-	11.	git push <Զ�̿���> <���ط�֧��>:<Զ�̷�֧��>�������ط�֧�ĸ��£����͵�Զ�ֿ̲⡣
-			ע�⣬��֧����˳���д����<��Դ��>:<Ŀ�ĵ�>������git pull��<Զ�̷�֧>:<���ط�֧>����git push��<���ط�֧>:<Զ�̷�֧>��
+	11.	git push <远程库名> <本地分支名>:<远程分支名>：将本地分支的更新，推送到远程仓库。
+			注意，分支推送顺序的写法是<来源地>:<目的地>，所以git pull是<远程分支>:<本地分支>，而git push是<本地分支>:<远程分支>。
 
-			���ʡ��Զ�̷�֧�������ʾ�����ط�֧������֮����"׷�ٹ�ϵ"��Զ�̷�֧��ͨ������ͬ�����������Զ�̷�֧�����ڣ���ᱻ�½������磺
+			如果省略远程分支名，则表示将本地分支推送与之存在"追踪关系"的远程分支（通常两者同名），如果该远程分支不存在，则会被新建。例如：
 			git push origin master
-			���������ʾ�������ص�master��֧���͵�origin������master��֧��������߲����ڣ���ᱻ�½���
+			上面命令表示，将本地的master分支推送到origin主机的master分支。如果后者不存在，则会被新建。
 
-			���ʡ�Ա��ط�֧�������ʾɾ��ָ����Զ�̷�֧����Ϊ���ͬ������һ���յı��ط�֧��Զ�̷�֧��
+			如果省略本地分支名，则表示删除指定的远程分支，因为这等同于推送一个空的本地分支到远程分支。
 			git push origin :master
-			��ͬ��
+			等同于
 			git push origin --delete master
-			���������ʾɾ��origin������master��֧��
+			上面命令表示删除origin主机的master分支。
 
-			�����ǰ��֧��Զ�̷�֧֮�����׷�ٹ�ϵ���򱾵ط�֧��Զ�̷�֧������ʡ�ԡ�
+			如果当前分支与远程分支之间存在追踪关系，则本地分支和远程分支都可以省略。
 			git push origin
-			���������ʾ������ǰ��֧���͵�origin�����Ķ�Ӧ��֧��
+			上面命令表示，将当前分支推送到origin主机的对应分支。
 
-			�����ǰ��ֻ֧��һ��׷�ٷ�֧����ô������������ʡ�ԡ�
+			如果当前分支只有一个追踪分支，那么主机名都可以省略。
 			git push
 
-			-u������Git������ѱ��ط�֧�������͵�Զ�̵ĸ÷�֧������ѱ��صĸ÷�֧��Զ�̵�ͬ����֧����������
-			���Ժ�����ͻ�����ȡʱ�Ϳ��Լ����
+			-u参数，Git不但会把本地分支内容推送的远程的该分支，还会把本地的该分支和远程的同名分支关联起来，
+			在以后的推送或者拉取时就可以简化命令。
 			
-			�����ǰ��֧������������׷�ٹ�ϵ�������ʹ��-uѡ��ָ��һ��Ĭ����������������Ϳ���
-			�����κβ���ʹ��git push��
+			如果当前分支与多个主机存在追踪关系，则可以使用-u选项指定一个默认主机，这样后面就可以
+			不加任何参数使用git push。
 			git push -u origin master
-			����������ص�master��֧���͵�origin������ͬʱָ��originΪĬ������������Ϳ��Բ���
-			�κβ���ʹ��git push�ˡ�
+			上面命令将本地的master分支推送到origin主机，同时指定origin为默认主机，后面就可以不加
+			任何参数使用git push了。
 
-��ǩ������
-	1.	git tag <tag-name> [<commit-id>]����һ���µı�ǩ��Ĭ�ϱ�ǩ�Ǵ��������ύ��commit�ϵģ�
-			Ĭ��ΪHEAD��Ҳ����ָ��һ��commit id
-	2.	git tag���鿴���б�ǩ
-	3.	git tag -a <tag-name> -m "ע��" <commit-id>����������˵���ı�ǩ����-aָ����ǩ����-mָ��˵������
-	4.	git show <tagname>���鿴��ǩ��Ϣ
-	5.	git push <�ֿ���> <tag-name>����ĳ����ǩ���͵�Զ��
-		git push <�ֿ���> --tags��һ��������ȫ����δ���͵�Զ�̵ı��ر�ǩ
-	6.	git tag -d <tag-name>��ɾ����ǩ
-	7.	git push origin :refs/tags/<tagname>������ɾ��һ��Զ�̱�ǩ��������Ҫ��ɾ�����ر�ǩ
+标签管理：
+	1.	git tag <tag-name> [<commit-id>]：打一个新的标签，默认标签是打在最新提交的commit上的，
+			默认为HEAD，也可以指定一个commit id
+	2.	git tag：查看所有标签
+	3.	git tag -a <tag-name> -m "注释" <commit-id>：创建带有说明的标签，用-a指定标签名，-m指定说明文字
+	4.	git show <tagname>：查看标签信息
+	5.	git push <仓库名> <tag-name>：将某个标签推送到远程
+		git push <仓库名> --tags：一次性推送全部尚未推送到远程的本地标签
+	6.	git tag -d <tag-name>：删除标签
+	7.	git push origin :refs/tags/<tagname>：可以删除一个远程标签，但是需要先删除本地标签
 
-�Զ���Git��
-	1.	git add -f <�ļ���>��ǿ�����ӱ�ignore���ļ�
-	2.	git check-ignore -v <�ļ���>���������ļ��Ǳ�����ignore���������
-	3.	git config --global alias.<��д> <ԭ����>��������ȡ��������д��
-	4.	git alias�����Բ鿴���еı������á�
-	
+自定义Git：
+	1.	git add -f <文件名>：强制添加被ignore的文件
+	2.	git check-ignore -v <文件名>：检查这个文件是被哪条ignore规则忽略了
+	3.	git config --global alias.<简写> <原命令>：给命令取别名，简化写法
+	4.	git alias：可以查看所有的别名配置。
