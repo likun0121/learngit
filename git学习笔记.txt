@@ -13,6 +13,7 @@ Git笔记
 			则commit的时候只提交第一次add之前的修改
 	5.	git log：查看日志
 		git log --pretty=oneline：注：参数“--pretty=oneline”不能有空格）
+		git log --graph：命令可以看到分支合并图
 	6.	git reset [--soft --mixed --hard] head^：回退版本(后面加数字n可以回退从当前数往后退的n个版本)
 		git reset [--soft --mixed --hard] head~：回退版本(后面加数字n可以回退从当前数往后退的n个版本)
 		git reset [--soft --mixed --hard] commit_id：回退到指定的提交id的版本。
@@ -45,35 +46,40 @@ Git笔记
 		git checkout -b <分支名称>：创建并切换分支
 	2.	git branch [-r] [-a]：查看分支(当前分支前会有一个*号)
 			-r选项，可以用来查看远程分支，-a选项查看所有分支。
-	3.	git merge：合并分支(命令用于合并指定分支到当前分支)
-			--no-ff参数就可以用普通模式合并，合并后的历史有分支，能看出来曾经做过合并
+	3.	git merge <分支名称>：合并分支(命令用于合并指定分支到当前分支)
 		git merge --no-ff -m "合并的日志" <分支名称>
+			--no-ff参数强制禁用Fast forward模式（默认模式）合并。
+			fast-forward模式，这种模式下，删除分支后，会丢掉分支信息
+			no-ff模式，会在merge时生成一个新的commit，这样合并后从历史中能看出来曾经有该分支且做过合并，可以保留历史记录。
 	4.	git branch -d <分支名称>：删除分支
+		git branch -D <分支名称>：强行删除一个没有合并的分支
 	5.	git log --graph [--pretty=oneline] [--abbrev-commit]：查看分支合并日志
 	6.	git stash：隐藏工作现场。
-			注：使用stash的意义可能在于心创建的文件如果只是add到stage，切换分支时，会把文件带到另外的分支
-	   	git stash save '注释'：(可以添加一些注释)
-	7.	git stash list：查看隐藏的工作现场
-	8.	git stash pop [–index] [stash_id]
+			注：使用stash的意义在于如果当前分支的工作正在进行，临时有其他紧急问题需要处理，
+			但是不想提交未完成的工作（以免留下大量的垃圾log），stash可以保存当前的工作状态，
+			以后可以重新恢复该状态继续工作。
+	7. 	git stash save '注释'：(可以添加一些注释)
+	8.	git stash list：查看隐藏的工作现场
+	9.	git stash pop [–index] [stash_id]
 		git stash pop 恢复最新的进度到工作区。git默认会把工作区和暂存区的改动都恢复到工作区。
 		git stash pop --index 恢复最新的进度到工作区和暂存区。（尝试将原来暂存区的改动还恢复到暂存区）
 		git stash pop stash@{1}恢复指定的进度到工作区。stash_id是通过git stash list命令得到的 
 			通过git stash pop命令恢复进度后，会删除当前进度。
-	9.	git stash apply [–index] [stash_id]：
+	10.	git stash apply [–index] [stash_id]：
 			恢复工作现场，但是恢复后，stash内容并不删除，其余和git stash pop 命令一样
-	10.	git stash drop [stash_id]：删除一个存储的进度。如果不指定stash_id，则默认删除最新的存储进度。
-	11.	git stash clear：删除所有存储的进度。
-	12.	git branch -D <name>：强行删除一个没有合并的分支
+	11.	git stash drop [stash_id]：删除一个存储的进度。如果不指定stash_id，则默认删除最新的存储进度。
+	12.	git stash clear：删除所有存储的进度。
 
 远程仓库：
 	1.	git remote：查看远程库信息。
 		git remote -v：查看更详细的远程仓库信息。
 	2.	git clone [-o <远程仓库名>] git@server-name:path/repo-name.git：克隆远程仓库。
 			clone的版本库默认的远程库名为origin，用 -o <远程仓库名>可以将仓库名指定为给定值。
+			远程仓库名是 本地版本库为识别远程库的所取的命称或者说别名。（以下称为远程库名）
 	3.	git remote show <远程库名>：查看该远程库的详细信息
-	4.	git remote add <远程仓库名> <git@server-name:path/repo-name.git>：创建一个远程仓库关联
+	4.	git remote add <远程库名> <git@server-name:path/repo-name.git>：创建一个远程仓库关联
 	5.	git remote rm <远程库名>：删除该远程库关联。
-	6.	git remote rename <原远程库名> <新库名>：重命名一个远程库的关联。
+	6.	git remote rename <原远程库名> <新远程库名>：重命名一个远程库的关联。
 	7.	git fetch：将最新的提交从当前分支抓取下来。
 			该命令通常用来查看其他人的进程，因为它取回的代码对你本地的开发代码没有影响。
 		git fetch <远程库名>：将指定的远程库的所有分支的更新，全部抓取到本地。
