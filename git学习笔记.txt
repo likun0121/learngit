@@ -13,64 +13,56 @@ Git笔记
 			则commit的时候只提交第一次add之前的修改
 	5.	git log：查看日志
 		git log --pretty=oneline：注：参数“--pretty=oneline”不能有空格）
-		git log --graph：命令可以看到分支合并图
-	6.	git reset [--soft --mixed --hard] head^：回退版本(后面加数字n可以回退从当前数往后退的n个版本)
-		git reset [--soft --mixed --hard] head~：回退版本(后面加数字n可以回退从当前数往后退的n个版本)
+	6.	git reset [--soft --mixed --hard] HEAD^：回退版本(后面加数字n可以回退从当前数往后退的n个版本)
+		git reset [--soft --mixed --hard] HEAD~：回退版本(后面加数字n可以回退从当前数往后退的n个版本)
 		git reset [--soft --mixed --hard] commit_id：回退到指定的提交id的版本。
 			三个参数的影响：
-			--soft：将重置HEAD指针到指定的commit（假设为commit A），但是工作区和暂存区不会变化，
-					将该commit A之后的变化都移动到暂存区。
-			--mixed：默认值，重置HEAD指针到指定的commit（假设commit id为A），同时也会重置暂存区，
-					使暂存区和版本库保持一致，将该commit A之后的变化移动到工作区。
-			--hard：重置HEAD指针到指定的commit（假设commit id为A），同时也会将暂存区和工作区也都
-					重置为commit A的状态，使三者完全一致，丢掉commit A之后的所有修改。
-		对此我找到一个别人的更简单的总结：
-			其实就是--soft 、--mixed以及--hard是三个恢复等级。
-			使用--soft就仅仅将头指针恢复，已经add的缓存以及工作空间的所有东西都不变。
-			使用--mixed，就将头恢复掉，已经add的缓存也会丢失掉，工作空间的代码什么的是不变的。
-			使用--hard，那么一切就全都恢复了，头变，add的缓存消失，代码什么的也恢复到以前状态。
+			--soft：将重置HEAD到指定的commit，但是工作区不会变化，将这次commit之后的变化都移动到暂存区。
+			--mixed：默认值，重置HEAD到指定的commit，同时也会重置暂存区，使暂存区和版本库保持一致，将这次commit之后的变化移动到工作区。
+			--hard：重置HEAD到指定的commit，同时也会将暂存区和工作区也都重置，使三者完全一致，将清除这次commit之后的所有变化。
 	7.	git reflog：查看历史命令
-	8.	git checkout -- <文件名>：撤销工作区修改到最近一次add操作。
+	8.	git checkout -- <文件名>：撤销工作区修改，让文件恢复到最近的一次commit或者add操作。
+			比如文件修改后没有add到暂存区，撤销修改会使文件和版本库一致，
+			如果文件修改后add到了缓存区，然后又做了修改，此时撤销会使文件和暂存区一致。
 			“--”必须存在，不然就是切换分支命令，且和文件名之间必须有空格。
-	9	git reset HEAD <文件名>：撤销暂存区修改，如果不加文件名，则撤销暂存区所有的修改
-	10.	git rm <文件名>：删除版本库中的文件(该命令和add类似，都需要之后用commit提交)
+	9	git reset HEAD <文件名>：撤销暂存区修改，如果不加文件名，则撤销暂存区所有的修改，就等于git reset --mixed HEAD
+	10.	git rm <文件名>：删除版本库中的文件，同时删除工作区本地文件(该命令和add类似，都需要之后用commit提交)
 		git rm -r <文件夹>：删除文件夹，-r表示递归所有子目录，如果要删除的，是空的文件夹，此处可以不用带上-r
+		git rm --cached <文件名>：从版本库删除，但是保留工作区本地文件。
 	11.	git diff：对比的是工作区和暂存区的差异。
 		git diff --cached：对比的是暂存区和版本库最新提交的差异。
-		git diff head：对比的是工作区和版本库最新提交的差异。
+		git diff HEAD：对比的是工作区和版本库最新提交的差异。
 	12.	git mv <原名称> <新名称>：文件的重命名。
 	
 分支管理：
 	1.	git branch <分支名称>：创建分支
+	2.	git switch <分支名称>：切换分支（可能旧版本不支持）
+		git switch -c <分支名称>：创建并切换分支（可能旧版本不支持）
 		git checkout <分支名称>：切换分支
 		git checkout -b <分支名称>：创建并切换分支
-	2.	git branch [-r] [-a]：查看分支(当前分支前会有一个*号)
+	3.	git branch [-r] [-a]：查看分支(当前分支前会有一个*号)
 			-r选项，可以用来查看远程分支，-a选项查看所有分支。
-	3.	git merge <分支名称>：合并分支(命令用于合并指定分支到当前分支)
+	4.	git merge <分支名称>：用于合并指定分支到当前分支
+			--no-ff参数就可以用普通模式合并，合并后的历史有分支，能看出来曾经做过合并
 		git merge --no-ff -m "合并的日志" <分支名称>
-			--no-ff参数强制禁用Fast forward模式（默认模式）合并。
-			fast-forward模式，这种模式下，删除分支后，会丢掉分支信息
-			no-ff模式，会在merge时生成一个新的commit，这样合并后从历史中能看出来曾经有该分支且做过合并，可以保留历史记录。
-	4.	git branch -d <分支名称>：删除分支
-		git branch -D <分支名称>：强行删除一个没有合并的分支
-	5.	git log --graph [--pretty=oneline] [--abbrev-commit]：查看分支合并日志
-	6.	git stash：储藏现有的工作状态（即git管理的文件发生的变更），将现有的工作状态保存到一个堆栈中，
-			并清空上次提交后git管理的修改。
-			注：使用stash的意义在于如果当前分支的工作正在进行，临时有其他紧急问题需要处理，
-			但是不想提交未完成的工作（以免留下大量的垃圾log），stash可以保存当前的工作状态，
-			以后可以重新恢复该状态继续工作。
-	7. 	git stash save '注释'：(可以添加一些注释或者说标识)
-	8.	git stash list：查看储藏的所有的工作状态。
-	9.	git stash pop [–-index] [stash@{n}]
-		git stash pop 恢复最新的储藏到工作区。git默认会把工作区和暂存区的改动都恢复到工作区，即git add的修改会恢复到工作区。
-		git stash pop --index 恢复最新的进度到工作区和暂存区。（与不加该选项的区别是会尝试将原来暂存区的改动还恢复到暂存区）
-		git stash pop stash@{n}恢复指定的进度到工作区。stash@{n}的中数字n可以通过git stash list命令查看，
-			如果不指定stash@{n}，则恢复最近的储藏的工作状态。
+	5.	git branch -d <分支名称>：删除分支
+	6.	git log --graph [--pretty=oneline] [--abbrev-commit]：查看分支合并日志
+	7.	git branch -D <name>：强行删除一个没有合并的分支
+	
+	8.	git stash：保存当前工作内容到git的存储中，包括工作区已经tracked和添加到暂存区的修改。
+			注：使用stash的场景比如当前正在做修改，但是需要紧急修复bug，此时可以将当前的修改保存起来，让工作区恢复未修改的状态，然后再做修改或切换分支。
+	   	git stash save '注释'：(可以添加一些注释)
+	9.	git stash list：查看隐藏的工作现场
+	10.	git stash pop [–index] [stash_id]
+		git stash pop 恢复最新的进度到工作区。git默认会把工作区和暂存区的改动都恢复到工作区。
+		git stash pop --index 恢复最新的进度到工作区和暂存区。（尝试将原来暂存区的改动还恢复到暂存区）
+		git stash pop stash@{1}恢复指定的进度到工作区。stash_id是通过git stash list命令得到的 
 			通过git stash pop命令恢复进度后，会删除当前进度。
-	10.	git stash apply [–-index] [stash@{n}]：
-			恢复工作现场，但是恢复后，stash内容并不删除，其余和git stash pop命令一样。
-	11.	git stash drop [stash@{n}]：删除一个存储的进度。如果不指定stash@{n}，则默认删除最新的储藏的工作状态。
-	12.	git stash clear：删除所有存储的进度。
+	11.	git stash apply [–-index] [stash_id]：
+			恢复工作现场，但是恢复后，stash内容并不删除，其余和git stash pop 命令一样
+	12.	git stash drop [stash_id]：删除一个存储的进度。如果不指定stash_id，则默认删除最新的存储进度。
+	13.	git stash clear：删除所有存储的进度。
+	14. git cherry-pick <commit-id>：复制一个特定的提交到当前分支。
 
 远程仓库：
 	1.	git remote：查看远程库信息。
